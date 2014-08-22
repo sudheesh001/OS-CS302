@@ -63,6 +63,7 @@ char **argv;
 	int i, c, mtty;
 	char *ap;
 	int uid, puid;
+	struct tty a;
 
 	obuf[0] = 1;
 	if (argc>1) {
@@ -112,7 +113,7 @@ char **argv;
 	seek(mem, nl[1].value, 0);
 	read(mem, &nl[1].value, 2);
 	seek(mem, nl[0].value, 0);
-	read(mem, proc, sizeof proc);
+	read(mem, proc, sizeof(proc));
 	getdev();
 	mtty = ttyn(0);
 	uid = getuid() & 0377;
@@ -133,7 +134,7 @@ char **argv;
 				goto out;
 			}
 			seek(mem, proc[i].p_ttyp, 0);
-			read(mem, &tty, sizeof tty);
+			read(mem, &tty, sizeof(tty));
 			for(c=0; c<ndev; c++)
 			if(devl[c] == tty.t_dev) {
 				devt[c] = proc[i].p_ttyp;
@@ -179,7 +180,7 @@ getdev()
 	char dbuf[512];
 	int sbuf[20];
 
-	f = open("/dev");
+	f = open("/dev","r");
 	if(f < 0) {
 		printf("cannot open /dev\n");
 		done();
@@ -287,7 +288,7 @@ done()
 {
 
 	fflush(obuf);
-	exit();
+	_exit(0);
 }
 
 putchar(c)
